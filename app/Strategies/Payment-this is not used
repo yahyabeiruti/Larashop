@@ -1,0 +1,142 @@
+
+<?php
+
+
+
+interface PaymentStrategyInterface
+{
+    public function pay(float $amount, array $paymentData): array;
+    public function validate(array $paymentData): bool;
+    public function getPaymentMethode(): string;
+}
+
+class PayPalPaymentStrategy implements PaymentStrategyInterface
+{
+    public function pay(float $amount, array $paymentData): array
+    {
+        $transactionId = 'pp_' . uniqid();
+
+        $success = $this->processPayPalPayment($amount, $paymentData);
+
+        return [
+            'success' => $success,
+            'transaction_id' => $transactionId,
+            'payment_methode' => $this->getPaymentMethode(),
+            'amount' => $amount
+        ];
+    }
+
+    public function validate(array $paymentData): bool
+    {
+        return isset($paymentData['email']) && isset($paymentData['password']);
+    }
+
+    public function getPaymentMethode(): string
+    {
+        return 'paypal';
+    }
+
+    public function processPayPalPayment(float $amount, array $paymentData) : bool
+    {
+        return true;
+    }
+}
+
+class CreditCardPaymentStrategy implements PaymentStrategyInterface
+{
+    public function pay(float $amount, array $paymentData): array
+    {
+        $transactionId = 'pp_' . uniqid();
+
+        $success = $this->processCreditCardPayment($amount, $paymentData);
+
+        return [
+            'success' => $success,
+            'transaction_id' => $transactionId,
+            'payment_methode' => $this ->getPaymentMethode(),
+            'amount' => $amount
+        ];
+    }
+
+    public function validate(array $paymentData): bool
+    {
+        return isset($paymentData['card_number']) &&
+        isset ($paymentData['cvv']) &&
+        isset($paymentData['expiry_date']);
+    }
+
+    public function getPaymentMethode(): string
+    {
+        return 'credit_card';
+    }
+
+    public function processCreditCardPayment(float $amount, array $paymentData): bool
+    {
+        return true;
+    }
+}
+
+class CashPaymentStrategy implements PaymentStrategyInterface
+{
+    public function pay(float $amount, array $paymentData): array
+    {
+        $transactionId = 'cash' . uniqid();
+
+        $success = $this->processCashPayment($amount, $paymentData);
+
+        return [
+            'success' => $success,
+            'transaction_id' => $transactionId,
+            'payment_methode' => $this ->getPaymentMethode(),
+            'amount' => $amount
+        ];
+
+    }
+
+    public function validate(array $paymentData): bool
+    {
+        return true;
+    }
+
+    public function getPaymentMethode(): string
+    {
+        return 'cash';
+    }
+
+    public function processCashPayment(float $amount, array $paymentData): bool
+    {
+        return true;
+    }
+}
+
+class WalletPaymentStrategy implements PaymentStrategyInterface
+{
+    public function pay(float $amount, array $paymentData): array
+    {
+        $transactionId = 'wallet' . uniqid();
+
+        $success = $this->processWalletPayment($amount, $paymentData); 
+
+        return [
+            'success' => $success,
+            'transaction_id' => $transactionId,
+            'payment_methode' => $this -> getPaymentMethode(),
+            'amount' => $amount
+        ];
+    }
+
+    public function validate(array $paymentData): bool
+    {
+        return true;
+    }
+
+    public function getPaymentMethode(): string
+    {
+        return 'wallet';
+    }
+
+    public function processWalletPayment(float $amount, array $paymentData): bool
+    {
+        return true;
+    }
+}

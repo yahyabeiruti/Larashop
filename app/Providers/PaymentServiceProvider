@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Providers;
+
+use App\Strategies\Payment\CreditCardPaymentStrategy;
+use App\Strategies\Payment\PayPalPaymentStrategy;
+use App\Strategies\Payment\CashPaymentStrategy;
+use App\Strategies\Payment\WalletPaymentStrategy;
+use illuminate\Support\ServiceProvider;
+
+
+class PaymentServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        $this->app->bind('payment.credit_card', CreditCardPaymentStrategy::class);
+        $this->app->bind('payment.paypal', PayPalPaymentStrategy::class);
+        $this->app->bind('payment.cash', CashPaymentStrategy::class);
+        $this->app->bind('payment.wallet', WalletPaymentStrategy::class);
+
+    }
+}
